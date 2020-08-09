@@ -7,7 +7,6 @@ using UnityEngine;
 public class LocalizationManager :  MonoBehaviour
 {
 
-    public List<LocalizationText> lestext = new List<LocalizationText>();
     public LocalizationSystem traductionSystem;
     private static LocalizationManager instance;   // GameSystem local instance
     public SystemLanguage systemLanguageTest;
@@ -22,13 +21,7 @@ public class LocalizationManager :  MonoBehaviour
             LoadJson(testResources[i].name);
         }
         Test();
-        //if (!PlayerPrefs.HasKey("lang"))
-        //{
-        //    traductionSystem.CurrentLang = Application.systemLanguage.ToString();
-        //    PlayerPrefs.SetString("lang", traductionSystem.CurrentLang);
-        //}
-        //else
-        //    traductionSystem.CurrentLang = PlayerPrefs.GetString("lang");
+        //LoadKey();
     }
     public void Test()
     {
@@ -36,6 +29,25 @@ public class LocalizationManager :  MonoBehaviour
         if (traductionSystem.langagesTraduction.ContainsKey(systemLanguageTest.ToString()))
         {
             traductionSystem.CurrentLang = systemLanguageTest.ToString();
+        }
+        else
+        {
+            //donnez le nom de votre langue par defaut
+            traductionSystem.CurrentLang = "English";
+        }
+    }
+    public void LoadKey()
+    {
+        //langue par défaut anglais;
+        if (traductionSystem.langagesTraduction.ContainsKey(systemLanguageTest.ToString()))
+        {
+            if (!PlayerPrefs.HasKey("lang"))
+            {
+                traductionSystem.CurrentLang = Application.systemLanguage.ToString();
+                PlayerPrefs.SetString("lang", traductionSystem.CurrentLang);
+            }
+            else
+                traductionSystem.CurrentLang = PlayerPrefs.GetString("lang");
         }
         else
         {
@@ -72,7 +84,6 @@ public class LocalizationManager :  MonoBehaviour
                 traductionSystem.langagesTraduction[lang.Split('_')[1]].Add(loadedData.items[i].key, loadedData.items[i].value);
             }          
         }
-        SystemLanguage.
     }
 
     [System.Serializable]
