@@ -7,7 +7,6 @@ public class LocalizationText : MonoBehaviour
 {
     [SerializeField]
     public string key;
-    [SerializeField]
     private TextMeshProUGUI mText;
     [SerializeField]
     LocalizationSystem localizationSystem=null;
@@ -19,7 +18,8 @@ public class LocalizationText : MonoBehaviour
     }
     public void Load()
     {
-        mText.text=localizationSystem.GetValue(key);
+        if(mText!=null)
+            mText.text=localizationSystem.GetValue(key);
     }
 
 
