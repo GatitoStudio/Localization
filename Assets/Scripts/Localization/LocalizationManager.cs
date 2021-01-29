@@ -10,9 +10,9 @@ public class LocalizationManager :  MonoBehaviour
     public LocalizationSystem traductionSystem;
     private static LocalizationManager instance;   // GameSystem local instance
     public SystemLanguage systemLanguageTest;
-   
+    public SystemLanguage defaultLangage;
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         TextAsset[] testResources = Resources.LoadAll<TextAsset>("Traduction").Cast<TextAsset>().ToArray();
         traductionSystem.langagesTraduction = new Dictionary<string, Dictionary<string, string>>();
@@ -23,7 +23,7 @@ public class LocalizationManager :  MonoBehaviour
         Test();
         //LoadKey();
     }
-    public void Test()
+    private void Test()
     {
         //langue par défaut anglais;
         if (traductionSystem.langagesTraduction.ContainsKey(systemLanguageTest.ToString()))
@@ -32,11 +32,10 @@ public class LocalizationManager :  MonoBehaviour
         }
         else
         {
-            //donnez le nom de votre langue par defaut
-            traductionSystem.CurrentLang = "English";
+            traductionSystem.CurrentLang = defaultLangage.ToString();
         }
     }
-    public void LoadKey()
+    private void LoadKey()
     {
         //langue par défaut anglais;
         if (traductionSystem.langagesTraduction.ContainsKey(systemLanguageTest.ToString()))

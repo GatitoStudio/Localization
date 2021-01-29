@@ -16,11 +16,12 @@ public class LocalizationText : MonoBehaviour
         localizationSystem.onValueChange += Load;
         Load();
     }
-    public void Load()
+    private void Load()
     {
         if(mText!=null)
             mText.text=localizationSystem.GetValue(key);
     }
+    private void OnDestroy() => localizationSystem.onValueChange -= Load;
 
 
 }
