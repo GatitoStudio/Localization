@@ -354,7 +354,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: HELLO
-  mText: {fileID: 0}
   localizationSystem: {fileID: 11400000, guid: 15f1567587a60b244b1088c331434232, type: 2}
 --- !u!114 &1366092405
 MonoBehaviour:
@@ -371,6 +370,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -503,9 +503,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cb5b768c758e2d45ae1318feb115844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lestext: []
   traductionSystem: {fileID: 11400000, guid: 15f1567587a60b244b1088c331434232, type: 2}
-  systemLanguageTest: 20
+  systemLanguageTest: 14
+  defaultLangage: 10
 --- !u!4 &1927193146
 Transform:
   m_ObjectHideFlags: 0
