@@ -1,3 +1,10 @@
 ﻿{ "items":[
-{"key" :"[HELLO]","value":"Bonjour"}
+{"key" :"[PLAY]","value":"Jouer"},
+{"key" :"[QUIT]","value":"Quitter"},
+{"key" :"[DASH_TIP]","value":"X/(Carre) + Direction : Dash"},
+{"key" :"[JUMP_TIP]","value":"C/(X) : Saut"},
+{"key" :"[CLIMB_TIP]","value":"Shift gauche/(Rond) : Grimper "},
+{"key" :"[BACK]","value":"Retour"},
+{"key" :"[SKIP]","value":"Passer"},
+{"key" :"[CREDIT]","value":"Crédits"}
 ]}

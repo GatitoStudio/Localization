@@ -1,3 +1,10 @@
 ﻿{ "items":[
-{"key" :"[HELLO]","value":"Hello"}
+{"key" :"[PLAY]","value":"Play"},
+{"key" :"[QUIT]","value":"Quit"},
+{"key" :"[DASH_TIP]","value":"X/(Square) + Direction : Dash"},
+{"key" :"[JUMP_TIP]","value":"C/(X) : Jump"},
+{"key" :"[CLIMB_TIP]","value":"Left shift/(Circle) : Climb"},
+{"key" :"[BACK]","value":"Back"},
+{"key" :"[SKIP]","value":"Skip"},
+{"key" :"[CREDIT]","value":"Credit"}
 ]}
