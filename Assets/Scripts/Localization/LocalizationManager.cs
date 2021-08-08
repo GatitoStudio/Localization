@@ -11,16 +11,12 @@ public class LocalizationManager :  MonoBehaviour
     private static LocalizationManager instance;   // GameSystem local instance
     public SystemLanguage systemLanguageTest;
     public SystemLanguage defaultLangage;
+    public static readonly string KEY_LANG = "lang";
+
     // Start is called before the first frame update
     private void Start()
     {
-        TextAsset[] testResources = Resources.LoadAll<TextAsset>("Traduction").Cast<TextAsset>().ToArray();
-        traductionSystem.langagesTraduction = new Dictionary<string, Dictionary<string, string>>();
-        for (int i = 0; i < testResources.Length; ++i)
-        {
-            LoadJson(testResources[i].name);
-        }
-        Test();
+
         //LoadKey();
     }
     private void Test()
@@ -60,6 +56,19 @@ public class LocalizationManager :  MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            TextAsset[] testResources = Resources.LoadAll<TextAsset>("Traduction").Cast<TextAsset>().ToArray();
+            traductionSystem.langagesTraduction = new Dictionary<string, Dictionary<string, string>>();
+            for (int i = 0; i < testResources.Length; ++i)
+            {
+                LoadJson(testResources[i].name);
+            }
+            if (!PlayerPrefs.HasKey(KEY_LANG))
+            {
+                traductionSystem.CurrentLang = Application.systemLanguage.ToString();
+                PlayerPrefs.SetString(KEY_LANG, traductionSystem.CurrentLang);
+            }
+            else
+                traductionSystem.CurrentLang = PlayerPrefs.GetString(KEY_LANG);
         }
         else
         {

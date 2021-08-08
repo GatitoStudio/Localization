@@ -8,6 +8,7 @@ using System.Net;
 using System.ComponentModel;
 using System.IO.Compression;
 using Ionic.Zip;
+using System;
 
 [System.Serializable]
 public class LocalizationConfig
@@ -19,26 +20,19 @@ public class LocalizationConfig
     [SerializeField]
     private string m_beginData;
     [SerializeField]
-    private List<string> m_langageColumns;
+    private List<SystemLanguage> m_langageNameColumns;
     private string m_pathGen;
     [SerializeField]
     private string m_pathExcelFile;
-    private string m_pathConfig = Directory.GetCurrentDirectory() + "\\Localization\\Debug\\config.ini";
-    private string m_pathPahIni = Directory.GetCurrentDirectory() + "\\Localization\\Debug\\path.ini";
+    private string m_pathConfig = Directory.GetCurrentDirectory() + "\\Localization\\config.ini";
+    private string m_pathPahIni = Directory.GetCurrentDirectory() + "\\Localization\\path.ini";
 
     public LocalizationConfig()
     {
     }
 
-    public LocalizationConfig(string fileNameOutput, List<string> cellForKey, string beginData, List<string> langageColumns, string path, string pathConfig)
-    {
-        m_fileNameOutput = fileNameOutput;
-        m_cellForKey = new List<string>(cellForKey);
-        m_beginData = beginData;
-        m_langageColumns = new List<string>(langageColumns);
-        m_pathGen = path;
-        m_pathConfig = pathConfig;
-    }
+    public string PathExcelFile { get => m_pathExcelFile; set => m_pathExcelFile = value; }
+
     public void ReadConfig()
     {
         using (StreamReader sr = new StreamReader(m_pathConfig), sr2 = new StreamReader(m_pathPahIni))
@@ -47,35 +41,48 @@ public class LocalizationConfig
             m_fileNameOutput = sr.ReadLine().Split('=')[1];
             m_cellForKey = sr.ReadLine().Split('=')[1].Split(',').ToList();
             m_beginData = sr.ReadLine().Split('=')[1];
-            m_langageColumns = sr.ReadLine().Split('=')[1].Split(',').ToList();
+            List<string> enumLangageNameString = sr.ReadLine().Split('=')[1].Split(',').ToList();
+            m_langageNameColumns = new List<SystemLanguage>();
+            foreach(string s in enumLangageNameString)
+            {
+                m_langageNameColumns.Add((SystemLanguage)Enum.Parse(typeof( SystemLanguage), s));
+            }
+            // m_langageNameColumns =
             m_pathGen = sr.ReadLine().Split('=')[1];
-            m_pathExcelFile = sr2.ReadLine();
+            PathExcelFile = sr2.ReadLine();
         }
     }
     public void WriteConfig()
     {
+
         using (StreamWriter sw = new StreamWriter(m_pathConfig), sw2 = new StreamWriter(m_pathPahIni))
         {
             sw.WriteLine("[OPTIONS]");
             sw.WriteLine("FileNameOutput=" + m_fileNameOutput);
             sw.WriteLine("CellForKey=" + string.Join(",", m_cellForKey.ToArray()));
             sw.WriteLine("BeginData=" + m_beginData);
-            sw.WriteLine("LangageColumn=" + string.Join(",", m_langageColumns.ToArray()));
+            List<string> enumLangageNameString = new List<string>();
+            foreach (SystemLanguage s in m_langageNameColumns)
+            {
+                enumLangageNameString.Add(s.ToString());
+            }
+            sw.WriteLine("LangageColumnName=" + string.Join(",", enumLangageNameString.ToArray()));
             sw.WriteLine("Path=Assets\\Resources\\Traduction\\");
-            sw2.Write(m_pathExcelFile);
+            sw2.Write(PathExcelFile);
             //m_fileNameOutput = sr.ReadLine().Split('=')[1];
             //m_cellForKey = sr.ReadLine().Split('=')[1].Split(',').ToList();
             //m_beginData = sr.ReadLine().Split('=')[1];
             //m_langageColumns = sr.ReadLine().Split('=')[1].Split(',').ToList();
             //m_path = sr.ReadLine().Split('=')[1];
         }
+        Debug.Log("Save succefull");
     }
 }
 
 public class LocalizationConfigEditor : EditorWindow
 {
     [SerializeField]
-    private LocalizationConfig test;
+    private LocalizationConfig config;
     Editor editor;
     private bool HasFolder = false;
     float progression = 0;
@@ -93,8 +100,8 @@ public class LocalizationConfigEditor : EditorWindow
         HasFolder = Directory.Exists(Directory.GetCurrentDirectory() + "\\Localization\\");
         if (HasFolder)
         {
-            test = new LocalizationConfig();
-            test.ReadConfig();
+            config = new LocalizationConfig();
+            config.ReadConfig();
         }
 
 
@@ -105,15 +112,15 @@ public class LocalizationConfigEditor : EditorWindow
         {
             if (!editor) { editor = Editor.CreateEditor(this); }
             if (editor) { editor.OnInspectorGUI(); }
-            if (GUILayout.Button("Ajouter"))
+            if (GUILayout.Button("Sauvegarder"))
             {
                 editor.serializedObject.ApplyModifiedProperties();
-                test.WriteConfig();
+                config.WriteConfig();
             }
         }
         else
         {
-            EditorGUI.ProgressBar(new Rect(3, 45, position.width - 6, 20), progression, "Progression");
+            EditorGUI.ProgressBar(new Rect(3, 45, position.width - 6, 20), progression, (progression*100).ToString("f0")+"%");
 
             if (GUILayout.Button("DownLoad"))
             {
@@ -129,7 +136,6 @@ public class LocalizationConfigEditor : EditorWindow
     private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
     {
         progression = (float)e.ProgressPercentage / 100;
-        Debug.Log(e.ProgressPercentage+"%");
         this.Repaint();
     }
 
@@ -141,16 +147,21 @@ public class LocalizationConfigEditor : EditorWindow
             zf.ExtractProgress += ProgressExtract;
             zf.ExtractAll(Directory.GetCurrentDirectory(), ExtractExistingFileAction.InvokeExtractProgressEvent);
         }
+        config.PathExcelFile = Directory.GetCurrentDirectory() + "\\Localization";
+        config.WriteConfig();
+        File.Delete(Directory.GetCurrentDirectory() + "\\Localization.zip");
     }
     private void ProgressExtract(object sender, ExtractProgressEventArgs e)
     {
-        Debug.Log(e.EventType == ZipProgressEventType.Extracting_AfterExtractAll);
-        if(e.EventType == ZipProgressEventType.Extracting_AfterExtractAll)
+        progression = (float)e.EntriesExtracted / e.EntriesTotal;
+        this.Repaint();
+        if (e.EventType == ZipProgressEventType.Extracting_AfterExtractAll)
         {
             this.OnEnable();
+
         }
-        if(e.EventType != ZipProgressEventType.Extracting_AfterExtractAll && e.EventType != ZipProgressEventType.Extracting_BeforeExtractAll)
-        Debug.Log((((float)e.EntriesExtracted / e.EntriesTotal)*100).ToString()+"%");
+        //if (e.EventType != ZipProgressEventType.Extracting_AfterExtractAll && e.EventType != ZipProgressEventType.Extracting_BeforeExtractAll)
+        //    Debug.Log((((float)e.EntriesExtracted / e.EntriesTotal)*100).ToString()+"%");
 
     }
 }

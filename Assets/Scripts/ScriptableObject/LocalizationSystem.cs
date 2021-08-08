@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -40,5 +41,14 @@ public class LocalizationSystem : ScriptableObject
         string value = null;
         value = GetValue(key);
         return string.Format(value, values);
+    }
+    public List<SystemLanguage> GetLanguageAvailable()
+    {
+        List<SystemLanguage> list = new List<SystemLanguage>();
+        foreach ( string key in langagesTraduction.Keys)
+        {
+            list.Add((SystemLanguage)Enum.Parse(typeof(SystemLanguage), key));
+        }
+        return list;
     }
 }

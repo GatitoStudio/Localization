@@ -10,9 +10,9 @@ public class LocalizationEditor
 	public static void GenerateJSON()
 	{
 		ProcessStartInfo startInfo = new ProcessStartInfo();
-		startInfo.FileName = Directory.GetCurrentDirectory()+"\\Localization\\Debug\\LocalizationConverter.exe";
-		UnityEngine.Debug.Log(Directory.GetCurrentDirectory() + "\\Localization/Debug\\LocalizationConverter.exe");
-		startInfo.WorkingDirectory = Directory.GetCurrentDirectory()+"\\Localization\\Debug"; 
+		startInfo.FileName = Directory.GetCurrentDirectory()+"\\Localization\\LocalizationConverter.exe";
+		UnityEngine.Debug.Log(Directory.GetCurrentDirectory() + "\\Localization\\LocalizationConverter.exe");
+		startInfo.WorkingDirectory = Directory.GetCurrentDirectory()+"\\Localization"; 
 		Process.Start(startInfo);
 	}
 }
